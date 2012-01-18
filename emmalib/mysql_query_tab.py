@@ -19,6 +19,7 @@
 
 import pango
 import gtk
+import gtksourceview2 as gtksourceview
 import traceback
 
 class mysql_query_tab:
@@ -27,7 +28,6 @@ class mysql_query_tab:
 		self.nb = nb
 		
 		renameload = {
-			"textview": "query_text", 
 			"treeview": "query_view", 
 			"save_result": "save_result",
 			"save_result_sql": "save_result_sql",
@@ -44,6 +44,18 @@ class mysql_query_tab:
 		
 		for attribute, xmlname in renameload.iteritems():
 			self.__dict__[attribute] = xml.get_widget(xmlname)
+
+		# Create a GTKSourceView for the query. One reason we do
+		# this in code is because I was unable to get the widget
+		# to appear in the Glade interface designer.
+		lang_manager = gtksourceview.language_manager_get_default()
+		buffer = gtksourceview.Buffer()
+		buffer.set_language(lang_manager.get_language('sql'))
+		buffer.set_highlight_syntax(True)
+		container = xml.get_widget('query_text_container')
+		self.textview = textview = gtksourceview.View(buffer)
+		container.add(textview)
+		textview.show()
 			
 		self.current_host = None
 		self.current_db = None
