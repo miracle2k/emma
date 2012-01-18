@@ -358,8 +358,11 @@ select * from user;
 					output.write("\n\t")
 				p = e
 				continue
-					
-			break
+
+			# If we can't parse the query (not continue), then make
+			# sure we don't set the text field contents, lest we
+			# loose whatever is not yet in output.
+			return
 		while True:
 			break
 			o = strspn(text, " \r\n\t", p)
