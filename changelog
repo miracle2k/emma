@@ -1,0 +1,104 @@
+emma (0.6) unstable; urgency=low
+  Tue, 24 Oct 2006 22:35:22 +0200:
+  * let all data files install to prefix + share/emma
+  Mon, 13 Nov 2006 19:45:01 +0100
+  * debian bug+patch Bug#398337: emma: Impossible to create a new connection
+    from Manolo Díaz
+  * bugfix: connection test button does not use given port number
+  * remember treeview cursor per tab
+  * automatic tab nameing with user defined pre-postfixes
+  * support for gtk themes thru "theme" config option - either as absolute 
+    path to theme-dir or as a subdir of os.path.join(sys.prefix, "share", "themes")
+  * included xfce's "Xfce-winter" theme from Olivier Fourdan
+  * first experimental pretty_format plugin - much work needed
+ -- Florian Schmidt <flo@fastflo.de> Mon, 13 Nov 2006 22:36:32 +0100
+
+emma (0.5) unstable; urgency=low
+  * added copyright information to each .py file
+  * enclose import of gtk in try/catch to allow setup.py to run without X
+  * added first *very* experimental version of pretty format plugin
+  * added command line option and suppress debug output
+  * create config directory on first save
+  * fixed default localhost configuration on first startup
+  * no database neccessary to connect to mysql host
+  * added message window wm hint
+  * newly created query get current host assigned
+  * fixed bug in query tab closing
+ -- Florian Schmidt <flo@fastflo.de>  Sun, 22 Oct 2006 22:56:59 +0200
+
+emma (0.4) unstable; urgency=low
+  Sat, 12 Aug 2006 19:54:37 +0200
+  * clear all sql_log/message entries via popup
+  * extended blobview for editing of big values (save/load to/from) disk
+  * per query-tab encoding support (all python supported encodings)
+  * fixed tab-signal handling - popup and buttons now work on all tabs
+  * reread-config menu option
+  * store table order on request
+  Sun, 13 Aug 2006 17:52:25 +0200
+  * improved append to table-function to requery created record
+  * each tab has its on selected database (show beneath the encoding)
+  * automatic query reexecution (until error)
+  * new feature: save result as sql script
+  * new field_conditions operators: "isnull", "not isnull" and "not like"
+  * pass unescaped input to query if field_conditions value starts with "eval: " 
+  * fixed sql_log when > and < chars appear in query
+  * fixed sql_log to retain the complete sql query even if it doesn't display it
+ -- Florian Schmidt <flo@fastflo.de>  Sun, 13 Aug 2006 17:52:25 +0200
+ 
+emma (0.3) unstable; urgency=low
+  Sun, 04 Jun 2006 17:47:06 +0200
+  * fixed field escaping at order-change
+  * introduced config directory
+  * first plugin system
+  * first table_editor plugin 
+ -- Florian Schmidt <flo@fastflo.de>  Sun, 04 Jun 2006 17:47:06 +0200
+ 
+emma (0.2) unstable; urgency=low
+  Sun, 26 Feb 2006 01:45:54 +0100
+  * table view
+  * query result popup
+  * order by click
+  * field condition filter
+  * local regex search
+  * append row
+  * delete row
+  * edit row
+  Sun, 26 Feb 2006 14:05:56 +0100
+  * fixed database/table order
+  * show tables while loading their descriptions
+  * process events in show_sql_log()
+  * update table view after first nb-page change
+  * db-tables view
+  * refresh/truncate/drop table
+  * refresh db
+  * new table
+  * drop db
+  * new database
+  * refresh host
+  * delete host
+  * new host
+  * modify host
+  Wed, 01 Mar 2006 19:48:49 +0100
+  * load query
+  * save query
+  * mysql_ping to connected hosts
+  * save workspace
+  * load workspace
+  * first easy pickle/unpickle
+  Fri, 03 Mar 2006 18:59:23 +0100
+  * save result
+  Sat, 04 Mar 2006 18:53:21 +0100
+  * debian package
+  Sat, 11 Mar 2006 16:03:49 +0100
+  * execute big sql skripts from file
+  * better placement of text-cursor on mysql error
+  * support for automatic reading bzip2 files on "execute big sql skripts from file"
+  * exclude regex
+ -- Florian Schmidt <flo@fastflo.de>  Sat, 11 Mar 2006 16:03:49 +0100
+
+emma (0.1) unstable; urgency=low
+  * copied yamysqlfront.glade to emma.glade
+  * connect first signal handlers in menubar
+    
+ -- Florian Schmidt <flo@fastflo.de>  Sun, 15 Jan 2006 17:50:07 +0100
+
