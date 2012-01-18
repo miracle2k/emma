@@ -33,6 +33,10 @@ setup(name="emma",
 		("share/emma/theme/gtk-2.0", theme_gtk_data),
 		("share/emma", other_data),
       ],
+      install_requires=[
+          'sqlparse=0.1.3',
+      ],
+
       license="GPL",
       long_description="""
 Emma is a graphical toolkit for MySQL database developers and administrators

@@ -25,6 +25,7 @@ import gobject
 import pprint
 import re
 import cStringIO
+import sqlparse
 
 def test(c, t, f):
 	if c:
@@ -212,169 +213,12 @@ select * from user;
 	def on_pretty_format(self, button):
 		q = self.emma.current_query
 		text = self.get_query_text(q)
-		print "input: %r" % text
-		output = cStringIO.StringIO()
-		keyword_normalisation = "u"
-
-		def starts_with(t, s, p):
-			print repr(t[p:p + len(s)].lower())
-			if t[p:p + len(s)].lower() == s:
-				return t[p:p + len(s)]
-			return None
-
-		def kw(s):
-			if keyword_normalisation == "uppercase":
-				return s.upper()
-			if keyword_normalisation == "lowercase":
-				return s.lower()
-			return s
-
-		p = 0
-		current_statement = None
-		current_state = None
-		tl = len(text)
-		token = None
-		while p < tl:
-			tt, token, e = get_token(text, p)
-			if not token:
-				break
-			print "got token      %-60.60r of type %r at %s %s" % (token, tt, current_statement, current_state)
-
-			if tt == "function call":
-				# uniform pretty print a function call
-				token = pretty_print_function_call(token)
-
-			if token.startswith("#"):
-				# comment line. skipping to eol
-				e = text.find("\n", e)
-				if e == -1:
-					# last line
-					break
-				p = e
-				continue
-			if token.startswith("/*"):
-				# comment line. skipping to eol
-				e = text.find("*/", p)
-				if e == -1:
-					break
-				p = e + 2
-				continue
-
-			if token == ";":
-				# new query
-				current_statement = None
-				current_state = None
-				output.write(token)
-				output.write("\n")
-				p = e
-				continue;
-				
-			if token.lower() == "select":
-				
-				# start of select statement!
-				output.write(kw(token))
-				output.write("\n\t")
-				p = e
-				current_statement = "select"
-				current_state = "fields"
-				continue
-
-			if token.lower() == "limit":
-				output.write("\n")
-				output.write(kw(token))
-				output.write("\n\t")
-				current_statement = "limit"
-				p = e
-				continue
-
-			if current_statement == "limit":
-				output.write(token)
-				if token == ",":
-					output.write(" ")
-				p = e
-				continue
-
-			if token.lower() == "order":
-				output.write("\n")
-				output.write(kw(token))
-				output.write(" ") # wait for by :)
-				p = e
-				current_statement = "order"
-				continue
-
-			if token.lower() == "by":
-				output.write(kw(token))
-				output.write("\n\t")
-				current_state = "order_fields"
-				order_dir = None
-				p = e
-				continue
-
-			if token.lower() == "where":
-				output.write("\n")
-				output.write(kw(token))
-				output.write("\n\t")
-				current_statement = "where"
-				p = e
-				continue
-
-			if current_statement == "where":
-				if token.lower() in ("and", "or"):
-					output.write("\n\t")
-					output.write(kw(token))
-				else:
-					output.write(token)
-				p = e
-				continue
-
-			if current_statement == "select" and current_state == "fields":
-				if token.lower() == "from":
-					output.write("\n")
-					output.write(kw(token))
-					output.write("\n\t")
-					p = e
-					current_state = "tables"
-					continue
-				output.write(token)
-				if token == ",":
-					output.write("\n\t")
-				p = e
-				continue
-
-
-			if current_statement == "select" and current_state == "tables":
-				output.write(token)
-				if token == ",":
-					output.write("\n\t")
-				p = e
-				continue
-			if current_statement == "order":
-				if token.lower() == "desc" or token.lower() == "asc":
-					output.write(" ")
-					output.write(kw(token))
-				else:
-					output.write(token)
-				if token == ",":
-					output.write("\n\t")
-				p = e
-				continue
-
-			# If we can't parse the query (not continue), then make
-			# sure we don't set the text field contents, lest we
-			# loose whatever is not yet in output.
-			return
-		while True:
-			break
-			o = strspn(text, " \r\n\t", p)
-			print "span  : ", o
-			s = p + o
-			print "start: %r" % text[s:]
-
-
-			break
-		self.set_query_text(q, output.getvalue())
+		formatted = sqlparse.format(text, reindent=True, keyword_case='upper')
+		self.set_query_text(q, formatted)
 
 	def on_compress(self, button):
+		# XXX this can also be done using sqlparse library, but requires builing
+		# a custom filter stack.
 		q = self.emma.current_query
 		text = self.get_query_text(q)
 		print "input: %r" % text
