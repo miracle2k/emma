@@ -1,2 +1,7 @@
 *.pyc
 /.idea/
+
+# distutils
+/build/
+/dist/
+/MANIFEST
