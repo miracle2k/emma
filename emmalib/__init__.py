@@ -61,9 +61,24 @@ if os.name in ["win32", "nt"]:
 			print "could not find glade file! checked these dirs:", dirs_checked
 			sys.exit(0)
 else:
-    emma_path = os.path.dirname(emmalib_file)
+	emma_path = os.path.dirname(emmalib_file)
 
-emma_share_path = os.path.join(sys.prefix, "share/emma/")
+
+def get_share_path():
+	"""Return path to share directory, in which we expect to
+	find icons, themes, layouts etc.
+	"""
+	script = os.path.abspath(sys.argv[0])
+	if script.startswith('/usr/local'):
+		result= os.path.join('/usr', 'local', 'share')
+	elif script.startswith('/usr'):
+		result= os.path.join('/usr', 'share')
+	else:
+		# assume running from dev
+		result = os.path.join(os.path.dirname(__file__), '..')
+	return result
+
+emma_share_path = os.path.join(get_share_path(), 'emma')
 icons_path = os.path.join(emma_share_path, "icons")
 glade_path = os.path.join(emma_share_path, "glade")
 themes_path = os.path.join(sys.prefix, "share", "themes")
@@ -75,10 +90,7 @@ class Emma:
 		self.query_count = 0
 		self.glade_path = glade_path
 		self.icons_path = icons_path
-		if os.path.exists(os.path.join(emma_path, 'emma.glade')):
-			self.glade_file = os.path.join(emma_path, 'emma.glade')
-		else:
-			self.glade_file = os.path.join(glade_path, "emma.glade")
+		self.glade_file = os.path.join(glade_path, "emma.glade")
 		if not os.access(self.glade_file, os.R_OK):
 			print self.glade_file, "not found!"
 			sys.exit(-1)
