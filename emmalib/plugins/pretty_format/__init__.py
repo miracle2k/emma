@@ -19,11 +19,7 @@
 
 import os
 import sys
-import time
 import gtk.glade
-import gobject
-import pprint
-import re
 import cStringIO
 import sqlparse
 

@@ -17,11 +17,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
+
 import sys
 import os
 from stat import *
-import time
-import re
 import gc
 import pickle
 import datetime
@@ -44,7 +43,6 @@ try:
 except:
 	print "no gtk. you will not be able to start emma."
 
-import pprint
 
 version = "0.6"
 new_instance = None

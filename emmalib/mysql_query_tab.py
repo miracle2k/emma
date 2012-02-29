@@ -20,7 +20,6 @@
 import pango
 import gtk
 import gtksourceview2 as gtksourceview
-import traceback
 
 class mysql_query_tab:
 	def __init__(self, xml, nb):
