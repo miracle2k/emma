@@ -35,14 +35,8 @@ from gtk import keysyms
 import gobject
 import gtk.gdk
 import gtk.glade
-if __name__ != "__main__":
-	from emmalib import __file__ as emmalib_file
-	from emmalib.mysql_host import *
-	from emmalib.mysql_query_tab import *
-else:
-	emmalib_file = __file__
-	from mysql_host import *
-	from mysql_query_tab import *
+from mysql_host import *
+from mysql_query_tab import *
 
 
 version = "0.6"
@@ -53,7 +47,7 @@ re_src_after_order_end = "(?:limit.*|procedure.*|for update.*|lock in share mode
 re_src_after_order = "(?:[ \r\n\t]" + re_src_after_order_end + ")"
 re_src_query_order = "(?is)(.*order[ \r\n\t]+by[ \r\n\t]+)(.*?)([ \r\n\t]*" + re_src_after_order_end + ")"
 
-emmalib_file = os.path.abspath(emmalib_file)
+emmalib_file = os.path.abspath(__file__)
 if os.name in ["win32", "nt"]:
 	print "Windows detected"
 	emma_path = emmalib_file
