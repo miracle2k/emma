@@ -3342,7 +3342,7 @@ def usage():
 	
 	print """usage: emma [-h|--help] [-d|--debug] [-l output_log [-f|--flush]]
  -h|--help     show this help message
- -d|--debug    output debug information on stdout
+ -q|--quiet    do not output debug information on stdout
  -l|--log FILE append all output to a specified log file
  -f|--flush    flush {stdout,log} after each write
 """
@@ -3351,7 +3351,7 @@ def usage():
 def start(args):
 	global new_instance
 
-	debug_output = False
+	no_debug_output = False
 	log_file = None
 	log_flush = False
 
@@ -3362,8 +3362,8 @@ def start(args):
 			continue
 		if arg == "-h" or arg == "--help":
 			usage()
-		elif arg == "-d" or arg == "--debug":
-			debug_output = True
+		elif arg == "-q" or arg == "--quiet":
+			no_debug_output = True
 		elif arg == "-f" or arg == "--flush":
 			log_flush = True
 		elif arg == "-l" or arg == "--log":
@@ -3374,7 +3374,8 @@ def start(args):
 			usage()
 
 	# this singleton will be accessible as sys.stdout!
-	output_handler(debug_output, log_file, log_flush)
+	# TODO: Use logging module rather than this custom solution.
+	output_handler(not no_debug_output, log_file, log_flush)
 
 	e = Emma()
 
