@@ -28,20 +28,21 @@ import bz2
 
 try:
 	import gtk
-	from gtk import keysyms
-	import gobject
-	import gtk.gdk
-	import gtk.glade
-	if __name__ != "__main__":
-		from emmalib import __file__ as emmalib_file
-		from emmalib.mysql_host import *
-		from emmalib.mysql_query_tab import *
-	else:
-		emmalib_file = __file__
-		from mysql_host import *
-		from mysql_query_tab import *
-except:
-	print "no gtk. you will not be able to start emma."
+except ImportError:
+	print "No GTK. You will not be able to start emma."
+
+from gtk import keysyms
+import gobject
+import gtk.gdk
+import gtk.glade
+if __name__ != "__main__":
+	from emmalib import __file__ as emmalib_file
+	from emmalib.mysql_host import *
+	from emmalib.mysql_query_tab import *
+else:
+	emmalib_file = __file__
+	from mysql_host import *
+	from mysql_query_tab import *
 
 
 version = "0.6"
