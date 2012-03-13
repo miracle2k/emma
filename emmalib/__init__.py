@@ -70,15 +70,15 @@ def get_share_path():
 	"""
 	script = os.path.abspath(sys.argv[0])
 	if script.startswith('/usr/local'):
-		result= os.path.join('/usr', 'local', 'share')
+		result= os.path.join('/usr', 'local', 'share', 'emma')
 	elif script.startswith('/usr'):
-		result= os.path.join('/usr', 'share')
+		result= os.path.join('/usr', 'share', 'emma')
 	else:
 		# assume running from dev
 		result = os.path.join(os.path.dirname(__file__), '..')
 	return result
 
-emma_share_path = os.path.join(get_share_path(), 'emma')
+emma_share_path = get_share_path()
 icons_path = os.path.join(emma_share_path, "icons")
 glade_path = os.path.join(emma_share_path, "glade")
 themes_path = os.path.join(sys.prefix, "share", "themes")
