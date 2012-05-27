@@ -3340,7 +3340,7 @@ class output_handler:
 
 def usage():
 	
-	print """usage: emma [-h|--help] [-d|--debug] [-l output_log [-f|--flush]]
+	print """usage: emma [-h|--help] [-q|--quiet] [-l output_log [-f|--flush]]
  -h|--help     show this help message
  -q|--quiet    do not output debug information on stdout
  -l|--log FILE append all output to a specified log file
