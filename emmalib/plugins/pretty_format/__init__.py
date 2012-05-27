@@ -169,19 +169,6 @@ class pretty_format:
 		self.install_toolbar_item("query_toolbar", gtk.STOCK_INDENT, "pretty format query", self.on_pretty_format)
 		self.install_toolbar_item("query_toolbar", gtk.STOCK_UNINDENT, "compress query", self.on_compress)
 		q = self.emma.current_query
-		if sys.stdout.debug:
-			# check if we are running with debug output - enable example text
-			print "\n\n\n"
-			self.set_query_text(q, """# this is the pretty format test query. click the "pretty format" or "compress query" button in the query-toolbar.
-       \n      \t# comment before\n\n/* also before... */\n   \tselect date_format \n\t (\nnow(  \n"lalala"  ) , "%Y-%m-%d"  \n), ("%Y,((%m"), \', from ),here\', * from record_job 
-where some_field
-= 
-"a very interesting 'text'"
-order by job_id desc,
-\tvalid_from,\n\t\t\n\tmode,\n\tquery,\n\tpriority desc limit 150;
-select * from user;
-""")
-
 
 	def cleanup(self):
 		for item, toolbar in self.toolbar_items:

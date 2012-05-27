@@ -3324,7 +3324,6 @@ class output_handler:
 			self.log_fp = file(log_file, "a+")
 		else:
 			self.log_fp = None
-		self.debug = print_stdout or log_file
 
 	def write(self, s):
 		if self.print_stdout:
