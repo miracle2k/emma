@@ -25,6 +25,7 @@ import gc
 import pickle
 import datetime
 import bz2
+from utils import get_contrast_color
 
 try:
 	import gtk
@@ -2265,6 +2266,11 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
 		
 		if "connection_window" not in self.__dict__:
 			self.connection_window = self.xml.get_widget("connection_window")
+			#container = self.connection_window.children()[0].children()[0]
+			# Need to add color button manually, not available in glade
+			#color_button = gtk.ColorButton()
+			#container.attach(color_button, 1,2,6,7)
+			#color_button.show()
 			self.xml.get_widget("cw_apply_button").connect("clicked", self.on_cw_apply)
 			self.xml.get_widget("cw_test_button").connect("clicked", self.on_cw_test)
 			self.xml.get_widget("cw_abort_button").connect("clicked", lambda *a: self.connection_window.hide())
@@ -2282,6 +2288,7 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
 		elif what == "modify_connection":
 			for n in self.cw_props:
 				self.xml.get_widget("cw_%s" % n).set_text(host.__dict__[n])
+			self.xml.get_widget("cw_color").set_color(gtk.gdk.Color(host.__dict__['color']))
 			self.cw_mode = "edit"
 			self.cw_host = host
 			self.connection_window.show()
@@ -2298,6 +2305,7 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
 		elif what == "new_connection":
 			for n in self.cw_props:
 				self.xml.get_widget("cw_%s" % n).set_text("")
+			self.xml.get_widget("cw_color").set_color(gtk.gdk.Color())
 			self.cw_mode = "new"
 			self.connection_window.show()
 		
@@ -2309,10 +2317,12 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
 			if not data[0]:
 				self.connection_window.hide()
 				return
-			self.add_mysql_host(*data)
+			kwargs = {'color': self.xml.get_widget("cw_color").get_color().to_string()}
+			self.add_mysql_host(*data, **kwargs)
 		else:
 			for n in self.cw_props:
 				self.cw_host.__dict__[n] = self.xml.get_widget("cw_%s" % n).get_text()
+			self.cw_host.color = self.xml.get_widget("cw_color").get_color().to_string()
 		self.connection_window.hide()
 		self.save_config()
 		
@@ -2803,6 +2813,22 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
 			return None
 		return entry.get_text()
 
+	def set_host_cell_color(self, cell, model, iter, depth):
+		def get_parent_iter(iter, level):
+			while level:
+				level -= 1
+				iter = model.iter_parent(iter)
+			return iter
+
+		host_iter = get_parent_iter(iter, depth)
+		host = model.get_value(host_iter, 0)
+		if host.color:
+			host_color = gtk.gdk.Color(host.color)
+			cell.set_property("cell-background-gdk", host_color)
+			return host_color
+		else:
+			cell.set_property("cell-background-gdk", None)
+
 	def render_connections_pixbuf(self, column, cell, model, iter):
 		d = model.iter_depth(iter)
 		o = model.get_value(iter, 0)
@@ -2819,13 +2845,13 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
 			cell.set_property("pixbuf", self.icons["field"])
 		else:
 			print "unknown depth", d," for render_connections_pixbuf with object", o
-		
-	def on_new_file_activate(self, *args):
-	    print "new file", args
+
+		self.set_host_cell_color(cell, model, iter, d)
 
 	def render_connections_text(self, column, cell, model, iter):
 		d = model.iter_depth(iter)
 		o = model.get_value(iter, 0)
+
 		if d == 0:
 			if o.connected:
 				cell.set_property("text", o.name)
@@ -2836,10 +2862,19 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
 		else: # everything else has a name
 			cell.set_property("text", o.name)
 			#print "unknown depth", d," for render_connections_pixbuf with object", o
-			
+
+		host_color = self.set_host_cell_color(cell, model, iter, d)
+		if host_color:
+			cell.set_property("foreground-gdk", get_contrast_color(host_color))
+		else:
+			cell.set_property("foreground-gdk", None)
+
+	def on_new_file_activate(self, *args):
+		print "new file", args
+
 	def render_mysql_string(self, column, cell, model, iter, id):
 		o = model.get_value(iter, id)
-		if not o is None: 
+		if not o is None:
 			cell.set_property("background", None)
 			if len(o) < 256:
 				cell.set_property("text", o)
@@ -2851,7 +2886,7 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
 			cell.set_property("background", self.config["null_color"])
 			cell.set_property("text", "")
 			cell.set_property("editable", True)
-		
+
 	def config_get_bool(self, name):
 		value = self.config[name].lower()
 		if value == "yes": return True
@@ -3038,7 +3073,12 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
 					if len(p) == 2:
 						port = p[1]
 						v[0] = p[0]
-					self.add_mysql_host(name[len(prefix):], v[0], port, v[1], v[2], v[3])
+					host = v.pop(0)
+					username = v.pop(0)
+					password = v.pop(0)
+					database = v.pop(0)
+					color = v.pop(0) if v else None
+					self.add_mysql_host(name[len(prefix):], host, port, username, password, database, color=color)
 			
 			prefix = "template";
 			if name.startswith(prefix):
@@ -3119,8 +3159,8 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
 	def on_query_encoding_changed(self, menuitem, data):
 		self.current_query.set_query_encoding(data[0])
 		
-	def add_mysql_host(self, name, hostname, port, user, password, database):
-		host = mysql_host(self.add_sql_log, self.add_msg_log, name, hostname, port, user, password, database, self.config["connect_timeout"])
+	def add_mysql_host(self, name, hostname, port, user, password, database, **kwargs):
+		host = mysql_host(self.add_sql_log, self.add_msg_log, name, hostname, port, user, password, database, self.config["connect_timeout"], **kwargs)
 		iter = self.connections_model.append(None, [host])
 		host.set_update_ui(self.redraw_host, iter)
 	

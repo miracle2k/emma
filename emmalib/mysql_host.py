@@ -24,7 +24,7 @@ import re
 from mysql_db import *
 
 class mysql_host:
-	def __init__(self, *args):
+	def __init__(self, *args, **kwargs):
 		if len(args) == 2:
 			# unpickle
 			self.sql_log, self.msg_log = args
@@ -47,6 +47,7 @@ class mysql_host:
 			self.current_db = None
 			self.expanded = False
 			self.handle = None
+			self.color = kwargs.pop('color', None)
 			
 		self.processlist = None
 		self.update_ui = None
@@ -64,7 +65,7 @@ class mysql_host:
 			output = "%s:%s" % (self.host, self.port)
 		else:
 			output = "%s" % self.host
-		output += ",%s,%s,%s" % (self.user, self.password, self.database)
+		output += ",%s,%s,%s,%s" % (self.user, self.password, self.database, self.color or '')
 		return output
 		
 	def set_update_ui(self, update_ui, *args):
