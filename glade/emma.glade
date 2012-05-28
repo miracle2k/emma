@@ -180,7 +180,7 @@ successor of yamysqlfront</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">connection name:</property>
+                <property name="label" translatable="yes">Connection Name:</property>
               </widget>
               <packing>
                 <property name="x_options">GTK_FILL</property>
@@ -192,7 +192,7 @@ successor of yamysqlfront</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">hostname:</property>
+                <property name="label" translatable="yes">Hostname:</property>
               </widget>
               <packing>
                 <property name="top_attach">1</property>
@@ -206,7 +206,7 @@ successor of yamysqlfront</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">user:</property>
+                <property name="label" translatable="yes">User:</property>
               </widget>
               <packing>
                 <property name="top_attach">3</property>
@@ -221,7 +221,7 @@ successor of yamysqlfront</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">password:</property>
+                <property name="label" translatable="yes">Password:</property>
                 <property name="justify">right</property>
               </widget>
               <packing>
@@ -286,7 +286,7 @@ successor of yamysqlfront</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">database:</property>
+                <property name="label" translatable="yes">Database:</property>
               </widget>
               <packing>
                 <property name="top_attach">5</property>
@@ -317,7 +317,7 @@ successor of yamysqlfront</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">port:</property>
+                <property name="label" translatable="yes">Port:</property>
               </widget>
               <packing>
                 <property name="top_attach">2</property>
