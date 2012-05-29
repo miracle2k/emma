@@ -34,7 +34,7 @@ setup(name="emma",
 		("share/emma", other_data),
       ],
       install_requires=[
-          'sqlparse=0.1.3',
+          'sqlparse==0.1.3',
       ],
 
       license="GPL",
